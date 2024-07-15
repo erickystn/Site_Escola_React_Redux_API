@@ -1,4 +1,5 @@
 import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { Router } from 'react-router-dom';
 import history from './services/history';
 import Header from './components/Header';

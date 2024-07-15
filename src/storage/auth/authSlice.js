@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
+import axios from '../../services/axios';
 
 const initialStates = {
   isLoggedIn: false,
@@ -11,7 +12,7 @@ const initialStates = {
 // cria os reducers e action dinamicamente
 export const authSlice = createSlice({
   name: 'auth',
-  initialState: initialStates,
+  initialState: { ...initialStates },
   reducers: {
     authSuccess: (state, { payload }) => {
       state.isLoggedIn = true;
@@ -21,6 +22,7 @@ export const authSlice = createSlice({
     },
     authFailed: (state, { payload }) => {
       payload?.errors?.forEach?.((error) => toast.error(error, { delay: 500 }));
+      delete axios?.defaults?.headers?.common?.Authorization;
       return initialStates;
     },
     authRequest: (state) => {

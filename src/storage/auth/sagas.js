@@ -17,7 +17,6 @@ function* fazerRequisicaoLogin({ payload }) {
     const { data } = yield call(axios.post, '/tokens', payload);
 
     yield put(authSuccess(data));
-    axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
     history.push(history?.location?.state?.prevPath || '/');
   } catch (error) {
     yield put(authFailed({ errors: error?.response?.data?.errors }));
@@ -58,7 +57,13 @@ function* fazerRequisicaoCadastro({ payload }) {
   }
 }
 
+function persistRehydrate({ payload }) {
+  const token = payload?.auth?.token;
+  if (token) axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+}
+
 export default all([
   takeLatest(authRequest().type, fazerRequisicaoLogin),
   takeLatest(cadastroRequest().type, fazerRequisicaoCadastro),
+  takeLatest('persist/REHYDRATE', persistRehydrate),
 ]);
